@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TemplateApplication.ViewModels;
+﻿using TemplateApplication.ViewModels;
 
 namespace TemplateApplication.Interfaces
 {
@@ -18,9 +13,6 @@ namespace TemplateApplication.Interfaces
         public bool Put(UsuarioViewModel usuarioViewModel);
 
         public bool Delete(string id);
-
-        
-
 
 
     }

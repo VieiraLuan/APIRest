@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Nest;
 using System.Linq.Expressions;
 using TemplateData.Context;
 using TemplateDomain.Models;

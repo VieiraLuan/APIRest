@@ -71,7 +71,7 @@ namespace TemplateApplication.Services
             if (_usuario == null)
                 throw new Exception("Usuario não encontrado");
 
-           
+
 
             _usuario = mapper.Map<Usuario>(usuarioViewModel);
 
