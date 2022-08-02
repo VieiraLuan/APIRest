@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Template.Auth.Models;
 using TemplateApplication.AutoMapper;
 using TemplateApplication.Interfaces;
 using TemplateApplication.Services;
@@ -16,6 +20,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Configuracoes
+
 //Inserindo Banco de Dados
 var connectionString = builder.Configuration.GetConnectionString("databaseUrl");
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging(true));
@@ -30,6 +36,29 @@ NativeInjector.RegistrarServicos(repositorio);
 //InserindoAutoMapper
 services.AddAutoMapper(typeof(AutoMapperSetup));
 
+//InserindoJwt
+
+var key = Encoding.ASCII.GetBytes(Settings.Secret);
+services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,9 +69,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+#region Autenticao
+app.UseAuthentication();
 app.UseAuthorization();
 
+#endregion
 app.MapControllers();
 
 app.Run();

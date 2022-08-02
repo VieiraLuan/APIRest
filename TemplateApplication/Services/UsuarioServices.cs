@@ -1,5 +1,7 @@
 ﻿
 using AutoMapper;
+using Template.Application.ViewModels;
+using Template.Auth.Services;
 using TemplateApplication.Interfaces;
 using TemplateApplication.ViewModels;
 using TemplateDomain.Entities;
@@ -11,6 +13,8 @@ namespace TemplateApplication.Services
     {
         private readonly IUsuarioRepository usuarioRepository;
         private readonly IMapper mapper;
+
+
         public UsuarioServices(IUsuarioRepository usuarioRepository, IMapper mapper)
         {
             this.usuarioRepository = usuarioRepository;
@@ -24,25 +28,13 @@ namespace TemplateApplication.Services
             IEnumerable<Usuario> _usuarios = usuarioRepository.GetAll();
 
             list = mapper.Map<List<UsuarioViewModel>>(_usuarios);
-            /*foreach (var item in _usuarios)
-            {
-                list.Add(mapper.Map<List<UsuarioViewModel>>(item));
-                //list.Add(new UsuarioViewModel { Id = item.Id, Email = item.Email, Nome = item.Nome });
-            }*/
+
             return list;
         }
 
         public bool Post(UsuarioViewModel usuarioViewModel)
         {
-            /*Usuario usuario = new Usuario
-            {
-                Id = Guid.NewGuid(),
-                Email = usuarioViewModel.Email,
-                Nome = usuarioViewModel.Nome,
-               
-            };*/
-
-            /*Estudando....*/
+            /*tem que ter os mesmos nomes de propriedades para fazer direto, se nao terá que atribuilas*/
             Usuario usuario = mapper.Map<Usuario>(usuarioViewModel);
 
             this.usuarioRepository.Create(usuario);
@@ -72,7 +64,6 @@ namespace TemplateApplication.Services
                 throw new Exception("Usuario não encontrado");
 
 
-
             _usuario = mapper.Map<Usuario>(usuarioViewModel);
 
             usuarioRepository.Update(_usuario);
@@ -93,6 +84,18 @@ namespace TemplateApplication.Services
                 throw new Exception("Usuario não encontrado");
 
             return usuarioRepository.Delete(_usuario);
+        }
+
+        public UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel user)
+        {
+            Usuario usuario = this.usuarioRepository.Find(x => !x.IsDeleted && x.Email.ToLower() == user.Email.ToLower());
+
+
+            if (usuario == null)
+                throw new Exception("Usuario não encontrado");
+
+            return new  UserAuthenticateResponseViewModel(mapper.Map<UsuarioViewModel>(usuario), TokenService.GenerateToken(usuario));
+
         }
     }
 }

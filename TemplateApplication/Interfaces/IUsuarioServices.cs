@@ -1,4 +1,5 @@
-﻿using TemplateApplication.ViewModels;
+﻿using Template.Application.ViewModels;
+using TemplateApplication.ViewModels;
 
 namespace TemplateApplication.Interfaces
 {
@@ -10,9 +11,11 @@ namespace TemplateApplication.Interfaces
 
         public UsuarioViewModel GetById(string id);
 
-        public bool Put(UsuarioViewModel usuarioViewModel);
+        bool Put(UsuarioViewModel usuarioViewModel);
 
-        public bool Delete(string id);
+        bool Delete(string id);
+
+        UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel user);
 
 
     }

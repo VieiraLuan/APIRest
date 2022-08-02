@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Template.Application.ViewModels;
 using TemplateApplication.Interfaces;
 using TemplateApplication.ViewModels;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace APIRest.Controllers
 {
@@ -52,7 +51,13 @@ namespace APIRest.Controllers
             return Ok(usuarioServices.Delete(id));
         }
 
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(UserAuthenticateRequestViewModel userViewModel)
+        {
+            return Ok(this.usuarioServices.Authenticate(userViewModel));
+        }
 
-        
+
+
     }
 }
